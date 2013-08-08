@@ -2,6 +2,7 @@
 namespace Ratchet\Wamp;
 use Ratchet\ComponentInterface;
 use Ratchet\ConnectionInterface;
+use Ratchet\WebSocket\Version\RFC6455\Connection;
 
 /**
  * An extension of Ratchet\ComponentInterface to server a WAMP application
@@ -16,6 +17,15 @@ interface WampServerInterface extends ComponentInterface {
      * @param array                        $params Call parameters received from the client
      */
     function onCall(ConnectionInterface $conn, $id, $topic, array $params);
+
+    /**
+     * A function to run before a connection is added to a topic on a subscribe request.
+     * @param \Ratchet\ConnectionInterface $conn
+     * @param string|Topic                 $topic
+     *
+     * @throws \Ratchet\Exception          if the subscription should not happen.
+     */
+    function onSubscribeReq(ConnectionInterface $conn, $topic);
 
     /**
      * A request to subscribe to a topic has been made

@@ -36,10 +36,23 @@ class TopicManager implements WsServerInterface, WampServerInterface {
     /**
      * {@inheritdoc}
      */
+    public function onSubscribeReq(ConnectionInterface $conn, $topic) {}
+
+    /**
+     * {@inheritdoc}
+     */
     public function onSubscribe(ConnectionInterface $conn, $topic) {
         $topicObj = $this->getTopic($topic);
 
         if ($conn->WAMP->subscriptions->contains($topicObj)) {
+            return;
+        }
+
+        try {
+            $this->app->onSubscribeReq($conn, $topicObj);
+        } catch (Exception $e) {
+            // No action taken according to WAMP v1 protocol.
+            // @ref http://wamp.ws/spec#subscribe_message
             return;
         }
 
